@@ -2,5 +2,15 @@
   "name": "eventra",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.0.0"
+  "type": "module",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0"
+  }
 }

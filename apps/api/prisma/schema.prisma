@@ -20,4 +20,39 @@ model User {
   role         UserRole
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  events Event[]
+}
+
+enum EventType {
+  MOVIE
+  SHOW
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+}
+
+model Event {
+  id          String      @id @default(uuid())
+  organizerId String
+  title       String
+  description String?
+  type        EventType
+  externalId  String?
+  date        DateTime
+  location    String
+  capacity    Int
+  price       Decimal     @db.Decimal(10, 2)
+  status      EventStatus @default(DRAFT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  organizer User @relation(fields: [organizerId], references: [id])
+
+  @@index([organizerId])
+  @@index([status])
+  @@index([date])
 }

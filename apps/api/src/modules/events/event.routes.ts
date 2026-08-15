@@ -5,6 +5,7 @@ import {
   createEvent,
   getPublishedEventById,
   listEvents,
+  publishEvent
 } from './event.service.js';
 import { createEventSchema, listEventsSchema } from './event.schemas.js';
 
@@ -76,6 +77,44 @@ eventRouter.post(
 
       res.status(201).json({
         data: event,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+eventRouter.post(
+  '/:id/publish',
+  authenticate,
+  authorize('ORGANIZER'),
+  async (req: AuthenticatedRequest, res, next) => {
+    try {
+      const result = await publishEvent(req.params.id, req.user!.id);
+
+      if (result === null) {
+        res.status(404).json({
+          message: 'Event not found',
+        });
+        return;
+      }
+
+      if (result === 'FORBIDDEN') {
+        res.status(403).json({
+          message: 'You do not have permission to publish this event',
+        });
+        return;
+      }
+
+      if (result === 'INVALID_STATUS') {
+        res.status(400).json({
+          message: 'Only draft events can be published',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        data: result,
       });
     } catch (error) {
       next(error);

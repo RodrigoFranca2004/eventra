@@ -7,8 +7,14 @@ import {
   getPublishedEventById,
   listEvents,
   publishEvent,
+  updateEvent,
 } from './event.service.js';
-import { createEventSchema, listEventsSchema } from './event.schemas.js';
+
+import {
+  createEventSchema,
+  listEventsSchema,
+  updateEventSchema,
+} from './event.schemas.js';
 
 import type { AuthenticatedRequest } from '../auth/auth.middleware.js';
 
@@ -167,3 +173,54 @@ eventRouter.post(
   },
 );
 
+eventRouter.put(
+  '/:id',
+  authenticate,
+  authorize('ORGANIZER'),
+  async (req: AuthenticatedEventRequest, res, next) => {
+    try {
+      const validation = updateEventSchema.safeParse(req.body);
+
+      if (!validation.success) {
+        res.status(400).json({
+          message: 'Invalid request data',
+          errors: validation.error.issues,
+        });
+        return;
+      }
+
+      const result = await updateEvent(
+        req.params.id,
+        req.user!.id,
+        validation.data,
+      );
+
+      if (result === null) {
+        res.status(404).json({
+          message: 'Event not found',
+        });
+        return;
+      }
+
+      if (result === 'FORBIDDEN') {
+        res.status(403).json({
+          message: 'You do not have permission to update this event',
+        });
+        return;
+      }
+
+      if (result === 'INVALID_STATUS') {
+        res.status(400).json({
+          message: 'Cancelled events cannot be updated',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);

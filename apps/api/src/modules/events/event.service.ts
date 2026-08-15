@@ -1,5 +1,8 @@
 import { prisma } from '../../lib/prisma.js';
-import type { CreateEventInput } from './event.schemas.js';
+import type {
+  CreateEventInput,
+  UpdateEventInput,
+} from './event.schemas.js';
 
 export async function createEvent(
   organizerId: string,
@@ -97,5 +100,32 @@ export async function cancelEvent(id: string, organizerId: string) {
     data: {
       status: 'CANCELLED',
     },
+  });
+}
+
+export async function updateEvent(
+  id: string,
+  organizerId: string,
+  data: UpdateEventInput,
+) {
+  const event = await prisma.event.findUnique({
+    where: { id },
+  });
+
+  if (!event) {
+    return null;
+  }
+
+  if (event.organizerId !== organizerId) {
+    return 'FORBIDDEN';
+  }
+
+  if (event.status === 'CANCELLED') {
+    return 'INVALID_STATUS';
+  }
+
+  return prisma.event.update({
+    where: { id },
+    data,
   });
 }

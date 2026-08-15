@@ -16,5 +16,15 @@ export const listEventsSchema = z.object({
   search: z.string().trim().max(100).optional(),
 });
 
+export const updateEventSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  description: z.string().trim().max(2000).optional(),
+  date: z.coerce.date(),
+  location: z.string().trim().min(1).max(300),
+  capacity: z.coerce.number().int().positive(),
+  price: z.coerce.number().nonnegative(),
+});
+
+export type UpdateEventInput = z.infer<typeof updateEventSchema>;
 export type CreateEventInput = z.infer<typeof createEventSchema>;
 export type ListEventsSchema = z.infer<typeof listEventsSchema>;

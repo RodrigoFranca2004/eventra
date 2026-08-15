@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { authenticate } from '../auth/auth.middleware.js';
 import { authorize } from '../auth/authorization.middleware.js';
-import { createEvent, listEvents } from './event.service.js';
+import {
+  createEvent,
+  getPublishedEventById,
+  listEvents,
+} from './event.service.js';
 import { createEventSchema, listEventsSchema } from './event.schemas.js';
 
 import type { AuthenticatedRequest } from '../auth/auth.middleware.js';
@@ -27,6 +31,25 @@ eventRouter.get('/', async (req, res, next) => {
 
     res.status(200).json({
       data: events,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+eventRouter.get('/:id', async (req, res, next) => {
+  try {
+    const event = await getPublishedEventById(req.params.id);
+
+    if (!event) {
+      res.status(404).json({
+        message: 'Event not found',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      data: event,
     });
   } catch (error) {
     next(error);

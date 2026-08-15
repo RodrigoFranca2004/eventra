@@ -40,3 +40,12 @@ export async function listEvents(filters: {
     },
   });
 }
+
+export async function getPublishedEventById(id: string) {
+  return prisma.event.findFirst({
+    where: {
+      id,
+      status: 'PUBLISHED',
+    },
+  });
+}

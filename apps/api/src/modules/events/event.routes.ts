@@ -8,6 +8,7 @@ import {
   listEvents,
   publishEvent,
   updateEvent,
+  deleteEvent,
 } from './event.service.js';
 
 import {
@@ -219,6 +220,35 @@ eventRouter.put(
       res.status(200).json({
         data: result,
       });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+eventRouter.delete(
+  '/:id',
+  authenticate,
+  authorize('ORGANIZER'),
+  async (req: AuthenticatedEventRequest, res, next) => {
+    try {
+      const result = await deleteEvent(req.params.id, req.user!.id);
+
+      if (result === null) {
+        res.status(404).json({
+          message: 'Event not found',
+        });
+        return;
+      }
+
+      if (result === 'FORBIDDEN') {
+        res.status(403).json({
+          message: 'You do not have permission to delete this event',
+        });
+        return;
+      }
+
+      res.status(204).send();
     } catch (error) {
       next(error);
     }

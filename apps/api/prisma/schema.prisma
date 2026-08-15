@@ -49,6 +49,7 @@ model Event {
   status      EventStatus @default(DRAFT)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
 
   organizer User @relation(fields: [organizerId], references: [id])
 

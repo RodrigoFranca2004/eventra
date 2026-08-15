@@ -30,6 +30,7 @@ export async function listEvents(filters: {
   return prisma.event.findMany({
     where: {
       status: 'PUBLISHED',
+      deletedAt: null,
       ...(filters.type && { type: filters.type }),
       ...(filters.search && {
         title: {
@@ -49,14 +50,18 @@ export async function getPublishedEventById(id: string) {
     where: {
       id,
       status: 'PUBLISHED',
+      deletedAt: null,
     },
   });
 }
 
 export async function publishEvent(id: string, organizerId: string) {
-  const event = await prisma.event.findUnique({
-    where: { id },
-  });
+  const event = await prisma.event.findFirst({
+  where: {
+    id,
+    deletedAt: null,
+  },
+});
 
   if (!event) {
     return null;
@@ -79,9 +84,12 @@ export async function publishEvent(id: string, organizerId: string) {
 }
 
 export async function cancelEvent(id: string, organizerId: string) {
-  const event = await prisma.event.findUnique({
-    where: { id },
-  });
+  const event = await prisma.event.findFirst({
+  where: {
+    id,
+    deletedAt: null,
+  },
+});
 
   if (!event) {
     return null;
@@ -108,9 +116,12 @@ export async function updateEvent(
   organizerId: string,
   data: UpdateEventInput,
 ) {
-  const event = await prisma.event.findUnique({
-    where: { id },
-  });
+  const event = await prisma.event.findFirst({
+  where: {
+    id,
+    deletedAt: null,
+  },
+});
 
   if (!event) {
     return null;
@@ -128,4 +139,30 @@ export async function updateEvent(
     where: { id },
     data,
   });
+}
+
+export async function deleteEvent(id: string, organizerId: string) {
+  const event = await prisma.event.findFirst({
+    where: {
+      id,
+      deletedAt: null,
+    },
+  });
+
+  if (!event) {
+    return null;
+  }
+
+  if (event.organizerId !== organizerId) {
+    return 'FORBIDDEN';
+  }
+
+  await prisma.event.update({
+    where: { id },
+    data: {
+      deletedAt: new Date(),
+    },
+  });
+
+  return true;
 }

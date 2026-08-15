@@ -11,4 +11,10 @@ export const createEventSchema = z.object({
   price: z.coerce.number().nonnegative(),
 });
 
+export const listEventsSchema = z.object({
+  type: z.enum(['MOVIE', 'SHOW']).optional(),
+  search: z.string().trim().max(100).optional(),
+});
+
 export type CreateEventInput = z.infer<typeof createEventSchema>;
+export type ListEventsSchema = z.infer<typeof listEventsSchema>;

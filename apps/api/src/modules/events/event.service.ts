@@ -19,3 +19,24 @@ export async function createEvent(
     },
   });
 }
+
+export async function listEvents(filters: {
+  type?: 'MOVIE' | 'SHOW';
+  search?: string;
+}) {
+  return prisma.event.findMany({
+    where: {
+      status: 'PUBLISHED',
+      ...(filters.type && { type: filters.type }),
+      ...(filters.search && {
+        title: {
+          contains: filters.search,
+          mode: 'insensitive',
+        },
+      }),
+    },
+    orderBy: {
+      date: 'asc',
+    },
+  });
+}

@@ -1,23 +1,28 @@
 import { Router } from 'express';
-import { UserRole } from '@prisma/client';
 import {
   authenticateUser,
   registerUser,
 } from './authentication.service.js';
+import { loginSchema, registerSchema } from './auth.schemas.js';
 import { generateToken } from './token.service.js';
 
 export const authRouter = Router();
 
 authRouter.post('/register', async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const validation = registerSchema.safeParse(req.body);
+
+  if (!validation.success) {
+    res.status(400).json({
+      message: 'Invalid request data',
+      errors: validation.error.issues,
+    });
+    return;
+  }
 
   try {
-    const user = await registerUser(
-      name,
-      email,
-      password,
-      role as UserRole,
-    );
+    const { name, email, password, role } = validation.data;
+
+    const user = await registerUser(name, email, password, role);
 
     res.status(201).json(user);
   } catch (error) {
@@ -35,10 +40,21 @@ authRouter.post('/register', async (req, res) => {
 });
 
 authRouter.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const validation = loginSchema.safeParse(req.body);
+
+  if (!validation.success) {
+    res.status(400).json({
+      message: 'Invalid request data',
+      errors: validation.error.issues,
+    });
+    return;
+  }
 
   try {
-    const user = await authenticateUser(email, password);
+    const user = await authenticateUser(
+      validation.data.email,
+      validation.data.password,
+    );
 
     const token = generateToken(user.id, user.role);
 

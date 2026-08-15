@@ -1,27 +1,35 @@
+import type { UserRole } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 import { verifyToken } from './token.service.js';
 
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    role: UserRole;
+  };
+}
+
 export function authenticate(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
-): void {
+) {
   const authorization = req.headers.authorization;
 
   if (!authorization?.startsWith('Bearer ')) {
     res.status(401).json({
-      message: 'Authentication required',
+      message: 'Authentication token is required',
     });
     return;
   }
 
-  const token = authorization.slice(7);
+  const token = authorization.replace('Bearer ', '');
 
   try {
     const payload = verifyToken(token);
 
-    req.authUser = {
-      id: payload.sub,
+    req.user = {
+      id: payload.userId,
       role: payload.role,
     };
 

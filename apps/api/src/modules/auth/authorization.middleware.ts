@@ -1,18 +1,23 @@
 import { UserRole } from '@prisma/client';
-import type { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Response } from 'express';
+import type { AuthenticatedRequest } from './auth.middleware.js';
 
 export function authorize(...allowedRoles: UserRole[]) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.authUser) {
+  return (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    if (!req.user) {
       res.status(401).json({
-        message: 'Authentication required',
+        message: 'Authentication token is required',
       });
       return;
     }
 
-    if (!allowedRoles.includes(req.authUser.role)) {
+    if (!allowedRoles.includes(req.user.role)) {
       res.status(403).json({
-        message: 'Access denied',
+        message: 'You do not have permission to access this resource',
       });
       return;
     }

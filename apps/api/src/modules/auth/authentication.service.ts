@@ -62,3 +62,21 @@ export async function authenticateUser(email: string, password: string) {
     role: user.role,
   };
 }
+
+export async function getUserById(id: string) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return user;
+}

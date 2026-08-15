@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import {
   authenticateUser,
+  getUserById,
   registerUser,
 } from './authentication.service.js';
 import { loginSchema, registerSchema } from './auth.schemas.js';
 import { generateToken } from './token.service.js';
+import { authenticate } from './auth.middleware.js';
 
 export const authRouter = Router();
 
@@ -74,4 +76,17 @@ authRouter.post('/login', async (req, res) => {
       message: 'Internal server error',
     });
   }
+});
+
+authRouter.get('/me', authenticate, async (req, res) => {
+  const user = await getUserById(req.user!.id);
+
+  if (!user) {
+    res.status(404).json({
+      message: 'User not found',
+    });
+    return;
+  }
+
+  res.status(200).json(user);
 });

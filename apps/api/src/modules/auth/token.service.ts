@@ -1,4 +1,4 @@
-import jwt, { type JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { UserRole } from '@prisma/client';
 
 function getJwtSecret(): string {
@@ -11,34 +11,24 @@ function getJwtSecret(): string {
   return jwtSecret;
 }
 
-export interface AuthTokenPayload extends JwtPayload {
-  sub: string;
+export interface AuthTokenPayload {
+  userId: string;
   role: UserRole;
 }
 
-export function generateToken(userId: string, role: UserRole): string {
+export function generateToken(userId: string, role: UserRole) {
   return jwt.sign(
     {
-      sub: userId,
+      userId,
       role,
     },
     getJwtSecret(),
     {
-      expiresIn: '1h', // Using a higher expire time for testing
+      expiresIn: '1h', // Using a higher time for tests
     },
   );
 }
 
 export function verifyToken(token: string): AuthTokenPayload {
-  const decodedToken = jwt.verify(token, getJwtSecret());
-
-  if (typeof decodedToken === 'string' || !decodedToken.sub || !decodedToken.role) {
-    throw new Error('Invalid token payload');
-  }
-
-  return {
-    ...decodedToken,
-    sub: decodedToken.sub,
-    role: decodedToken.role as UserRole,
-  };
+  return jwt.verify(token, getJwtSecret()) as AuthTokenPayload;
 }

@@ -1,17 +1,24 @@
-import { Router } from 'express';
+import { Router, Request } from 'express';
 import { authenticate } from '../auth/auth.middleware.js';
 import { authorize } from '../auth/authorization.middleware.js';
 import {
   createEvent,
+  cancelEvent,
   getPublishedEventById,
   listEvents,
-  publishEvent
+  publishEvent,
 } from './event.service.js';
 import { createEventSchema, listEventsSchema } from './event.schemas.js';
 
 import type { AuthenticatedRequest } from '../auth/auth.middleware.js';
 
 export const eventRouter = Router();
+
+type EventParams = {
+  id: string;
+};
+
+type AuthenticatedEventRequest = AuthenticatedRequest & Request<EventParams>;
 
 eventRouter.get('/', async (req, res, next) => {
   try {
@@ -61,7 +68,7 @@ eventRouter.post(
   '/',
   authenticate,
   authorize('ORGANIZER'),
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedEventRequest, res, next) => {
     try {
       const result = createEventSchema.safeParse(req.body);
 
@@ -88,7 +95,7 @@ eventRouter.post(
   '/:id/publish',
   authenticate,
   authorize('ORGANIZER'),
-  async (req: AuthenticatedRequest, res, next) => {
+  async (req: AuthenticatedEventRequest, res, next) => {
     try {
       const result = await publishEvent(req.params.id, req.user!.id);
 
@@ -109,6 +116,44 @@ eventRouter.post(
       if (result === 'INVALID_STATUS') {
         res.status(400).json({
           message: 'Only draft events can be published',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+eventRouter.post(
+  '/:id/cancel',
+  authenticate,
+  authorize('ORGANIZER'),
+  async (req: AuthenticatedEventRequest, res, next) => {
+    try {
+      const result = await cancelEvent(req.params.id, req.user!.id);
+
+      if (result === null) {
+        res.status(404).json({
+          message: 'Event not found',
+        });
+        return;
+      }
+
+      if (result === 'FORBIDDEN') {
+        res.status(403).json({
+          message: 'You do not have permission to cancel this event',
+        });
+        return;
+      }
+
+      if (result === 'INVALID_STATUS') {
+        res.status(400).json({
+          message: 'Event is already cancelled',
         });
         return;
       }

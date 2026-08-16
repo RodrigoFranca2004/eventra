@@ -213,6 +213,118 @@ main {
   background: var(--color-border);
 }
 
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.auth-card h1 {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: -0.04em;
+}
+
+.auth-card > p {
+  margin: 12px 0 32px;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+.auth-card input:focus {
+  border-color: var(--color-primary);
+}
+
+.auth-card button {
+  padding: 13px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+}
+
+.auth-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.auth-error {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.password-input {
+  position: relative;
+  width: 100%;
+}
+
+.password-input input {
+  width: 100%;
+  padding-right: 3.5rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent !important;
+  color: inherit;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.password-toggle svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.password-toggle:hover {
+  background: transparent !important;
+  opacity: 0.7;
+}
+
 @media (max-width: 768px) {
   .header__nav {
     display: none;

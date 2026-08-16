@@ -7,6 +7,7 @@ import { catalogRouter } from './modules/catalog/catalog.routes.js';
 import { eventRouter } from './modules/events/event.routes.js';
 import { reservationRouter } from './modules/reservations/reservation.routes.js';
 import { paymentRouter } from './modules/payments/payment.routes.js';
+import { ticketRouter } from './modules/tickets/ticket.routes.js';
 
 export const app = express();
 
@@ -19,5 +20,6 @@ app.use('/catalog', catalogRouter);
 app.use('/events', eventRouter);
 app.use('/reservations', reservationRouter);
 app.use('/payments', paymentRouter);
+app.use('/tickets', ticketRouter);
 
 app.use(errorHandler);

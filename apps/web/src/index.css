@@ -1206,3 +1206,33 @@ main {
     width: 100%;
   }
 }
+
+.ticket-details__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.ticket-details__qr > span {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.ticket-details__qr svg {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background: white;
+}
+
+.ticket-details__qr p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}

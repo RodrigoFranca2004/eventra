@@ -5,6 +5,7 @@ import {
   getTicketShareLink,
 } from '../services/ticket.service';
 import type { Ticket } from '../types/ticket';
+import { QRCodeSVG } from 'qrcode.react';
 
 export function TicketDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -173,6 +174,20 @@ export function TicketDetailsPage() {
             <p>Link copied to clipboard.</p>
           </div>
         )}
+
+        <div className="ticket-details__qr">
+            <span>Ticket QR code</span>
+
+            <QRCodeSVG
+                value={`${window.location.origin}/tickets/share/${ticket.code}`}
+                size={220}
+                level="H"
+            />
+
+            <p>
+                Scan this QR code to view the shared ticket.
+            </p>
+        </div>
       </div>
     </section>
   );

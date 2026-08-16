@@ -19,10 +19,12 @@ export function SeatSelectionPage() {
       return;
     }
 
+    const eventId = id;
+
     const token = localStorage.getItem('token');
 
     if (!token) {
-      navigate(`/login?redirect=/events/${id}/seats`, {
+      navigate(`/login?redirect=/events/${eventId}/seats`, {
         replace: true,
       });
       return;
@@ -32,7 +34,7 @@ export function SeatSelectionPage() {
 
     async function loadSeats() {
       try {
-        const data = await listEventSeats(id);
+        const data = await listEventSeats(eventId);
 
         if (active) {
           setSeats(data);
@@ -47,7 +49,7 @@ export function SeatSelectionPage() {
           error.message.toLowerCase().includes('authentication')
         ) {
           localStorage.removeItem('token');
-          navigate(`/login?redirect=/events/${id}/seats`, {
+          navigate(`/login?redirect=/events/${eventId}/seats`, {
             replace: true,
           });
           return;

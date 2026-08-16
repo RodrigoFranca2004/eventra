@@ -70,15 +70,19 @@ export function EventDetailsPage() {
     );
   }
 
-  function handleReserve() {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      navigate(`/login?redirect=/events/${event.id}/seats`);
+  function handleReserveTickets() {
+    if (!id) {
       return;
     }
 
-    navigate(`/events/${event.id}/seats`);
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate(`/login?redirect=/events/${id}/seats`);
+      return;
+    }
+
+    navigate(`/events/${id}/seats`);
   }
 
   return (
@@ -141,7 +145,7 @@ export function EventDetailsPage() {
           <button
             type="button"
             className="event-details__reserve"
-            onClick={handleReserve}
+            onClick={handleReserveTickets}
           >
             Reserve tickets
           </button>

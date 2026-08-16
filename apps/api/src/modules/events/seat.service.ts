@@ -21,6 +21,12 @@ export async function listEventSeats(eventId: string) {
       ticket: {
         select: {
           status: true,
+          reservation: {
+            select: {
+              status: true,
+              createdAt: true,
+            },
+          },
         },
       },
     },
@@ -34,13 +40,26 @@ export async function listEventSeats(eventId: string) {
     ],
   });
 
-  return seats.map((seat) => ({
-    id: seat.id,
-    row: seat.row,
-    number: seat.number,
-    type: seat.type,
-    available: !seat.ticket || seat.ticket.status !== 'ACTIVE',
-  }));
+  const expirationTime = new Date(Date.now() - 10 * 60 * 1000);
+
+  return seats.map((seat) => {
+    const ticket = seat.ticket;
+
+    const occupied =
+      ticket?.status === 'ACTIVE' &&
+      ticket.reservation.status !== 'PENDING' ||
+      (ticket?.status === 'ACTIVE' &&
+        ticket.reservation.status === 'PENDING' &&
+        ticket.reservation.createdAt > expirationTime);
+
+    return {
+      id: seat.id,
+      row: seat.row,
+      number: seat.number,
+      type: seat.type,
+      available: !occupied,
+    };
+  });
 }
 
 export async function createEventSeats(

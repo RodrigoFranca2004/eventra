@@ -84,14 +84,23 @@ export function HomePage() {
               to={`/events/${event.id}`}
               className="event-card"
             >
+              <div className="event-card__image">
+                <span>{event.type}</span>
+              </div>
+
               <div className="event-card__content">
                 <h2>{event.title}</h2>
-                <p>{event.location}</p>
-                <p>
+
+                <p className="event-card__location">
+                  {event.location}
+                </p>
+
+                <p className="event-card__date">
                   {new Date(event.date).toLocaleDateString('en-US', {
                     dateStyle: 'medium',
                   })}
                 </p>
+
                 <strong>
                   {Number(event.price).toLocaleString('en-US', {
                     style: 'currency',

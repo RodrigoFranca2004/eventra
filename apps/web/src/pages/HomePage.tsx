@@ -85,17 +85,25 @@ export function HomePage() {
               className="event-card"
             >
               <div className="event-card__image">
-                <span>{event.type}</span>
+                {event.imageUrl ? (
+                  <img src={event.imageUrl} alt={event.title} />
+                ) : (
+                  <div className="event-card__placeholder">
+                    No image available
+                  </div>
+                )}
+
+                <span className="event-card__type">{event.type}</span>
               </div>
 
               <div className="event-card__content">
+                <span className="event-card__type">{event.type}</span>
+
                 <h2>{event.title}</h2>
 
-                <p className="event-card__location">
-                  {event.location}
-                </p>
+                <p>{event.location}</p>
 
-                <p className="event-card__date">
+                <p>
                   {new Date(event.date).toLocaleDateString('en-US', {
                     dateStyle: 'medium',
                   })}

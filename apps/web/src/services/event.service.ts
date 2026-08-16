@@ -1,12 +1,14 @@
 import { api } from './api.service';
 import type { Event } from '../types/event';
 
-interface ListEventsResponse {
-  data: Event[];
+export async function listPublishedEvents(): Promise<Event[]> {
+  const response = await api<{ data: Event[] }>('/events');
+
+  return response.data;
 }
 
-export async function listPublishedEvents(): Promise<Event[]> {
-  const response = await api<ListEventsResponse>('/events');
+export async function getEventById(id: string): Promise<Event> {
+  const response = await api<{ data: Event }>(`/events/${id}`);
 
   return response.data;
 }

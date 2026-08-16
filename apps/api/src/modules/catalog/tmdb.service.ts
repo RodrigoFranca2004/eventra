@@ -41,3 +41,17 @@ export async function searchMovies(query: string): Promise<TmdbMovie[]> {
 
   return response.data.results;
 }
+
+export async function getMovieById(id: string): Promise<TmdbMovie> {
+  const response = await axios.get<TmdbMovie>(
+    `${TMDB_BASE_URL}/movie/${id}`,
+    {
+      params: {
+        api_key: getTmdbApiKey(),
+        language: 'en-US',
+      },
+    },
+  );
+
+  return response.data;
+}

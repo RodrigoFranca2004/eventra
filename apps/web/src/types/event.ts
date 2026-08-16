@@ -2,15 +2,16 @@ export interface Event {
   id: string;
   organizerId: string;
   title: string;
-  description: string;
-  type: string;
+  description: string | null;
+  type: 'MOVIE' | 'SHOW';
   externalId: string | null;
   date: string;
   location: string;
   capacity: number;
-  price: string;
-  status: string;
+  price: number | string;
+  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED';
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  imageUrl: string | null;
 }

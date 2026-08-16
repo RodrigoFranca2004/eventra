@@ -5,7 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "pnpm --filter @eventra/api lint && pnpm --filter @eventra/web lint",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

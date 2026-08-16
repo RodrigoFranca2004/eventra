@@ -6,7 +6,8 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "prisma": "prisma"
+    "prisma": "prisma",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

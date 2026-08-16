@@ -4,8 +4,10 @@ import type { AuthUser } from '../types/auth';
 export interface AuthContextValue {
   user: AuthUser | null;
   isAuthenticated: boolean;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(

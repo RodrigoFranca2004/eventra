@@ -1337,3 +1337,190 @@ main {
   }
 }
 
+.gatekeeper-page__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.gatekeeper-page__back:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.gatekeeper-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.gatekeeper-page .page-header {
+  align-items: flex-end;
+}
+
+.gatekeeper-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 640px;
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.gatekeeper-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gatekeeper-field label {
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gatekeeper-field select,
+.gatekeeper-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: var(--color-background);
+  color: var(--color-text);
+  font: inherit;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.gatekeeper-field select:focus,
+.gatekeeper-field input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(
+    in srgb,
+    var(--color-primary) 15%,
+    transparent
+  );
+}
+
+.gatekeeper-card > button {
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.gatekeeper-card > button:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.gatekeeper-card > button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.gatekeeper-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.gatekeeper-result strong {
+  font-size: 1rem;
+}
+
+.gatekeeper-result span {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.gatekeeper-result--valid {
+  border-color: #22c55e;
+}
+
+.gatekeeper-result--invalid,
+.gatekeeper-result--already_used,
+.gatekeeper-result--wrong_event {
+  border-color: #ef4444;
+}
+
+@media (max-width: 640px) {
+  .gatekeeper-card {
+    padding: 1.25rem;
+  }
+
+  .gatekeeper-page .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.gatekeeper-scanner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.gatekeeper-scanner > div {
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.gatekeeper-scanner video {
+  width: 100%;
+  display: block;
+  border-radius: var(--radius-sm);
+}
+
+.gatekeeper-scanner button {
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gatekeeper-scanner button:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}

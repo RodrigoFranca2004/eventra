@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { api } from '../services/api';
+import { api } from '../services/api.service';
 import type { AuthUser, LoginResponse } from '../types/auth';
 import { AuthContext } from './AuthContext';
 

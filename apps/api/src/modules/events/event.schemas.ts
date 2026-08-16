@@ -25,6 +25,16 @@ export const updateEventSchema = z.object({
   price: z.coerce.number().nonnegative(),
 });
 
+export const createSeatsSchema = z.object({
+  rows: z.array(
+    z.object({
+      name: z.string().min(1).max(5),
+      seats: z.number().int().min(1).max(100),
+      type: z.enum(['STANDARD', 'PREMIUM', 'ACCESSIBLE']).default('STANDARD'),
+    }),
+  ).min(1).max(50),
+});
+
 export type UpdateEventInput = z.infer<typeof updateEventSchema>;
 export type CreateEventInput = z.infer<typeof createEventSchema>;
 export type ListEventsSchema = z.infer<typeof listEventsSchema>;

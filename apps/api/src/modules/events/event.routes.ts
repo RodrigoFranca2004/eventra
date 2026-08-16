@@ -11,10 +11,16 @@ import {
   deleteEvent,
 } from './event.service.js';
 
+import { 
+  listEventSeats,
+  createEventSeats,
+ } from './seat.service.js';
+
 import {
   createEventSchema,
   listEventsSchema,
   updateEventSchema,
+  createSeatsSchema
 } from './event.schemas.js';
 
 import type { AuthenticatedRequest } from '../auth/auth.middleware.js';
@@ -254,3 +260,79 @@ eventRouter.delete(
     }
   },
 );
+
+eventRouter.post(
+  '/:id/seats',
+  authenticate,
+  authorize('ORGANIZER'),
+  async (req, res, next) => {
+    try {
+      const result = createSeatsSchema.safeParse(req.body);
+
+      if (!result.success) {
+        res.status(400).json({
+          message: 'Invalid request data',
+          errors: result.error.issues,
+        });
+        return;
+      }
+
+      const authenticatedRequest = req as AuthenticatedRequest;
+
+      if (!authenticatedRequest.user) {
+        res.status(401).json({
+          message: 'Authentication required',
+        });
+        return;
+      }
+
+      const eventId = req.params.id;
+
+      if (Array.isArray(eventId)) {
+        res.status(400).json({
+          message: 'Invalid event ID',
+        });
+        return;
+      }
+
+      const seats = await createEventSeats(
+        eventId,
+        authenticatedRequest.user.id,
+        result.data.rows,
+      );
+
+      if (seats === null) {
+        res.status(404).json({
+          message: 'Event not found',
+        });
+        return;
+      }
+
+      res.status(201).json({
+        data: seats,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+eventRouter.get('/:id/seats', async (req, res, next) => {
+  try {
+    const seats = await listEventSeats(req.params.id);
+
+    if (seats === null) {
+      res.status(404).json({
+        message: 'Event not found',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      data: seats,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+

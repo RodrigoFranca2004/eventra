@@ -5,6 +5,10 @@ import { healthRouter } from './routes/health.routes.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { catalogRouter } from './modules/catalog/catalog.routes.js';
 import { eventRouter } from './modules/events/event.routes.js';
+import { reservationRouter } from './modules/reservations/reservation.routes.js';
+import { paymentRouter } from './modules/payments/payment.routes.js';
+import { ticketRouter } from './modules/tickets/ticket.routes.js';
+import { gatekeeperRouter } from './modules/gatekeeper/gatekeeper.routes.js';
 
 export const app = express();
 
@@ -15,5 +19,9 @@ app.use('/health', healthRouter);
 app.use('/auth', authRouter);
 app.use('/catalog', catalogRouter);
 app.use('/events', eventRouter);
+app.use('/reservations', reservationRouter);
+app.use('/payments', paymentRouter);
+app.use('/tickets', ticketRouter);
+app.use('/gatekeeper', gatekeeperRouter);
 
 app.use(errorHandler);

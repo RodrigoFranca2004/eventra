@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { listEventSeats } from '../services/event.service';
 import { createReservation } from '../services/reservation.service';
 import type { Seat } from '../types/seat';
+import { ApiError } from '../services/api.service';
 
 export function SeatSelectionPage() {
   const { id } = useParams<{ id: string }>();
@@ -40,23 +41,19 @@ export function SeatSelectionPage() {
           setSeats(data);
         }
       } catch (error) {
-        if (!active) {
-          return;
-        }
+          if (!active) {
+            return;
+          }
 
-        if (
-          error instanceof Error &&
-          error.message.toLowerCase().includes('authentication')
-        ) {
-          localStorage.removeItem('token');
-          navigate(`/login?redirect=/events/${eventId}/seats`, {
-            replace: true,
-          });
-          return;
-        }
+          if (error instanceof ApiError && error.status === 401) {
+            navigate(`/login?redirect=/events/${id}/seats`, {
+              replace: true,
+            });
+            return;
+          }
 
-        setError('Unable to load seats.');
-      } finally {
+          setError('Unable to load seats.');
+        } finally {
         if (active) {
           setLoading(false);
         }
@@ -103,12 +100,12 @@ export function SeatSelectionPage() {
       setReserving(true);
       setError('');
 
-      await createReservation({
+      const reservation = await createReservation({
         eventId: id,
         seatIds: selectedSeats,
       });
 
-      navigate('/tickets');
+      navigate(`/payment/${reservation.reservation.id}`);
     } catch (error) {
       setError(
         error instanceof Error

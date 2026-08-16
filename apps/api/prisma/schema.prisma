@@ -72,7 +72,7 @@ enum TicketStatus {
 model Ticket {
   id            String       @id @default(uuid())
   reservationId String
-  seatId        String       @unique
+  seatId        String
   status        TicketStatus @default(ACTIVE)
   code          String       @unique
   createdAt     DateTime     @default(now())
@@ -85,6 +85,7 @@ model Ticket {
 
   @@unique([reservationId, seatId])
   @@index([status])
+  @@index([seatId])
 }
 
 enum ReservationStatus {
@@ -127,8 +128,8 @@ model Seat {
   type      SeatType @default(STANDARD)
   createdAt DateTime @default(now())
 
-  event  Event   @relation(fields: [eventId], references: [id])
-  ticket Ticket?
+  event   Event    @relation(fields: [eventId], references: [id])
+  tickets Ticket[]
 
   @@unique([eventId, row, number])
   @@index([eventId])

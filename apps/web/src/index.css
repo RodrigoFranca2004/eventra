@@ -804,3 +804,128 @@ main {
     align-items: stretch;
   }
 }
+
+.payment-page {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.payment-page__back {
+  display: inline-flex;
+  margin-bottom: 2rem;
+  color: var(--color-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.payment-page__back:hover {
+  color: var(--color-primary);
+}
+
+.payment-page__card {
+  padding: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme='dark'] .payment-page__card {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.payment-page__header {
+  margin-bottom: 2rem;
+}
+
+.payment-page__header h1 {
+  margin: 0.35rem 0 0;
+  font-size: 2rem;
+}
+
+.payment-page__header p {
+  margin: 0.75rem 0 0;
+  color: var(--color-muted);
+}
+
+.payment-page__summary {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.payment-page__summary-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.payment-page__summary-item span {
+  color: var(--color-muted);
+}
+
+.payment-page__summary-item strong {
+  color: var(--color-text);
+}
+
+.payment-page__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.payment-page__button {
+  min-height: 48px;
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.payment-page__button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.payment-page__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.payment-page__button--approve {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.payment-page__button--decline {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.payment-page__error {
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #ef4444;
+  border-radius: var(--radius-md);
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+@media (max-width: 640px) {
+  .payment-page__card {
+    padding: 1.25rem;
+  }
+
+  .payment-page__actions {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,3 +1,12 @@
+export class ApiError extends Error {
+  status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 export async function api<T>(
@@ -17,8 +26,15 @@ export async function api<T>(
 
   const data = await response.json();
 
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+  }
+
   if (!response.ok) {
-    throw new Error(data.message ?? 'Request failed');
+    throw new ApiError(
+      data.message ?? 'Request failed',
+      response.status,
+    );
   }
 
   return data;

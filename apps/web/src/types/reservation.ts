@@ -25,6 +25,16 @@ export interface Ticket {
   updatedAt: string;
 }
 
+export interface ReservationDetails extends Reservation {
+  event: {
+    id: string;
+    title: string;
+    date: string;
+    location: string;
+  };
+  tickets: Ticket[];
+}
+
 export interface CreateReservationInput {
   eventId: string;
   seatIds: string[];

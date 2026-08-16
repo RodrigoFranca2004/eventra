@@ -145,3 +145,33 @@ export async function createReservation(
     };
   });
 }
+
+export async function getReservationById(
+  reservationId: string,
+  userId: string,
+) {
+  return prisma.reservation.findFirst({
+    where: {
+      id: reservationId,
+      userId,
+    },
+    include: {
+      event: {
+        select: {
+          id: true,
+          title: true,
+          date: true,
+          location: true,
+        },
+      },
+      tickets: {
+        select: {
+          id: true,
+          seatId: true,
+          status: true,
+          code: true,
+        },
+      },
+    },
+  });
+}

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getEventById } from '../services/event.service';
 import type { Event } from '../types/event';
 
 export function EventDetailsPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(Boolean(id));
@@ -69,6 +70,17 @@ export function EventDetailsPage() {
     );
   }
 
+  function handleReserve() {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate(`/login?redirect=/events/${event.id}/seats`);
+      return;
+    }
+
+    navigate(`/events/${event.id}/seats`);
+  }
+
   return (
     <section className="page event-details">
       <Link to="/" className="event-details__back">
@@ -126,8 +138,12 @@ export function EventDetailsPage() {
             </div>
           </div>
 
-          <button type="button" className="event-details__reserve">
-            Reserve ticket
+          <button
+            type="button"
+            className="event-details__reserve"
+            onClick={handleReserve}
+          >
+            Reserve tickets
           </button>
         </div>
       </div>

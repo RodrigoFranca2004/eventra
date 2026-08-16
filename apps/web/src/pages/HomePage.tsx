@@ -67,6 +67,7 @@ export function HomePage() {
         </div>
 
         <input
+          className="event-search"
           type="search"
           placeholder="Search events..."
           value={search}

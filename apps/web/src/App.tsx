@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage';
 import { MyTicketsPage } from './pages/MyTicketsPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { OrganizerPage } from './pages/OrganizerPage';
+import { SeatSelectionPage } from './pages/SeatSelectionPage';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/events/:id" element={<EventDetailsPage />} />
+        <Route path="/events/:id/seats" element={<SeatSelectionPage />} />
 
         <Route element={<ProtectedRoute roles={['CUSTOMER']} />}>
           <Route path="/tickets" element={<MyTicketsPage />} />

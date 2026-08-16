@@ -23,7 +23,11 @@ export function LoginPage() {
 
     try {
       await login(email, password);
-      navigate('/');
+
+      const searchParams = new URLSearchParams(location.search);
+      const redirect = searchParams.get('redirect') ?? '/';
+
+      navigate(redirect);
     } catch (error) {
       setError(
         error instanceof Error ? error.message : 'Unable to sign in',

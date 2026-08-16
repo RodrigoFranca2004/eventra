@@ -115,3 +115,29 @@ export async function getSharedTicket(code: string) {
     },
   });
 }
+
+export async function getTicketShareLink(
+  ticketId: string,
+  userId: string,
+) {
+  const ticket = await prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+      reservation: {
+        userId,
+      },
+      status: 'ACTIVE',
+    },
+    select: {
+      code: true,
+    },
+  });
+
+  if (!ticket) {
+    return null;
+  }
+
+  return {
+    url: `/tickets/share/${ticket.code}`,
+  };
+}

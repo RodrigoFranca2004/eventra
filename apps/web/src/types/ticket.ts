@@ -24,3 +24,21 @@ export interface Ticket {
     };
   };
 }
+
+export interface SharedTicket {
+  id: string;
+  status: 'ACTIVE';
+  seat: {
+    row: string;
+    number: number;
+    type: SeatType;
+  };
+  reservation: {
+    event: {
+      id: string;
+      title: string;
+      date: string;
+      location: string;
+    };
+  };
+}

@@ -11,6 +11,7 @@ import { OrganizerPage } from './pages/OrganizerPage';
 import { SeatSelectionPage } from './pages/SeatSelectionPage';
 import { PaymentPage } from './pages/PaymentPage';
 import { TicketDetailsPage } from './pages/TicketDetailsPage';
+import { SharedTicketPage } from './pages/SharedTicketPage';
 
 export default function App() {
   return (
@@ -29,6 +30,9 @@ export default function App() {
         <Route element={<ProtectedRoute roles={['CUSTOMER']} />}>
           <Route path="/tickets/:id" element={<TicketDetailsPage />} />
         </Route>
+
+        <Route path="/tickets/share/:code" element={<SharedTicketPage />}
+        />
 
         <Route element={<ProtectedRoute roles={['ORGANIZER']} />}>
           <Route path="/organizer" element={<OrganizerPage />} />

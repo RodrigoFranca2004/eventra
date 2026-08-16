@@ -72,7 +72,7 @@ export async function createReservation(
           data: {
             reservationId: reservation.id,
             seatId,
-            code: crypto.randomUUID(),
+            code: crypto.randomBytes(32).toString('hex'),
             status: 'ACTIVE',
           },
         }),

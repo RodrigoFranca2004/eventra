@@ -3,6 +3,7 @@ import { authenticate } from '../auth/auth.middleware.js';
 import { authorize } from '../auth/authorization.middleware.js';
 import type { AuthenticatedRequest } from '../auth/auth.middleware.js';
 import {
+  getSharedTicket,
   getUserTicket,
   listUserTickets,
 } from './ticket.service.js';
@@ -36,6 +37,34 @@ ticketRouter.get(
     }
   },
 );
+
+ticketRouter.get('/share/:code', async (req, res, next) => {
+  try {
+    const code = req.params.code;
+
+    if (Array.isArray(code)) {
+      res.status(400).json({
+        message: 'Invalid ticket code',
+      });
+      return;
+    }
+
+    const ticket = await getSharedTicket(code);
+
+    if (!ticket) {
+      res.status(404).json({
+        message: 'Ticket not found',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      data: ticket,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 ticketRouter.get(
   '/:id',
@@ -81,3 +110,4 @@ ticketRouter.get(
     }
   },
 );
+

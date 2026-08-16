@@ -83,3 +83,35 @@ export async function getUserTicket(
     },
   });
 }
+
+export async function getSharedTicket(code: string) {
+  return prisma.ticket.findFirst({
+    where: {
+      code,
+      status: 'ACTIVE',
+    },
+    select: {
+      id: true,
+      status: true,
+      seat: {
+        select: {
+          row: true,
+          number: true,
+          type: true,
+        },
+      },
+      reservation: {
+        select: {
+          event: {
+            select: {
+              id: true,
+              title: true,
+              date: true,
+              location: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}

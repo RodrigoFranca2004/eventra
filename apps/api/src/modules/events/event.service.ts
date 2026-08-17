@@ -37,7 +37,6 @@ export async function createEvent(
       externalId: data.externalId,
       date: data.date,
       location: data.location,
-      capacity: data.capacity,
       price: data.price,
     },
   });

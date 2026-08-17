@@ -80,6 +80,17 @@ export async function createEventSeats(
     data,
   });
 
+  const capacity = data.length;
+
+  await prisma.event.update({
+    where: {
+      id: eventId,
+    },
+    data: {
+      capacity,
+    },
+  });
+
   return prisma.seat.findMany({
     where: {
       eventId,

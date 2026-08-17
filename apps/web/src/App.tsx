@@ -12,6 +12,7 @@ import { SeatSelectionPage } from './pages/SeatSelectionPage';
 import { PaymentPage } from './pages/PaymentPage';
 import { TicketDetailsPage } from './pages/TicketDetailsPage';
 import { SharedTicketPage } from './pages/SharedTicketPage';
+import { CreateEventPage } from './pages/CreateEventPage';
 
 export default function App() {
   return (
@@ -35,7 +36,7 @@ export default function App() {
         />
 
         <Route element={<ProtectedRoute roles={['ORGANIZER']} />}>
-          <Route path="/organizer" element={<OrganizerPage />} />
+          <Route path="/organizer" element={<CreateEventPage />} />
         </Route>
 
         <Route element={<ProtectedRoute roles={['GATEKEEPER']} />}>

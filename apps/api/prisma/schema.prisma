@@ -46,7 +46,7 @@ model Event {
   externalId  String?
   date        DateTime
   location    String
-  capacity    Int
+  capacity    Int?
   price       Decimal     @db.Decimal(10, 2)
   status      EventStatus @default(DRAFT)
   createdAt   DateTime    @default(now())

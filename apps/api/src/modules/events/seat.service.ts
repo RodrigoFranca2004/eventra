@@ -18,9 +18,12 @@ export async function listEventSeats(eventId: string) {
       eventId,
     },
     include: {
-      ticket: {
+      tickets: {
+        where: {
+          status: 'ACTIVE',
+        },
         select: {
-          status: true,
+          id: true,
         },
       },
     },
@@ -39,7 +42,7 @@ export async function listEventSeats(eventId: string) {
     row: seat.row,
     number: seat.number,
     type: seat.type,
-    available: !seat.ticket || seat.ticket.status !== 'ACTIVE',
+    available: seat.tickets.length === 0,
   }));
 }
 
@@ -75,6 +78,17 @@ export async function createEventSeats(
 
   await prisma.seat.createMany({
     data,
+  });
+
+  const capacity = data.length;
+
+  await prisma.event.update({
+    where: {
+      id: eventId,
+    },
+    data: {
+      capacity,
+    },
   });
 
   return prisma.seat.findMany({

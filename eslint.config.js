@@ -7,12 +7,13 @@ export default tseslint.config(
       '**/dist/**',
       '**/node_modules/**',
       '**/.prisma/**',
+      'apps/web/**',
     ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['apps/api/**/*.ts', 'packages/shared/**/*.ts'],
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',

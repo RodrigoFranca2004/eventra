@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 
 import { prisma } from '../../lib/prisma.js';
 
+const RESERVATION_EXPIRATION_MINUTES = 10;
+
 export async function createReservation(
   userId: string,
   eventId: string,
@@ -33,6 +35,64 @@ export async function createReservation(
   if (seats.length !== uniqueSeatIds.length) {
     return null;
   }
+
+  const expirationTime = new Date(
+    Date.now() - RESERVATION_EXPIRATION_MINUTES * 60 * 1000,
+  );
+
+  await prisma.$transaction(async (tx) => {
+    const expiredReservations = await tx.reservation.findMany({
+      where: {
+        status: 'PENDING',
+        createdAt: {
+          lt: expirationTime,
+        },
+        tickets: {
+          some: {
+            seatId: {
+              in: uniqueSeatIds,
+            },
+            status: 'ACTIVE',
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (expiredReservations.length === 0) {
+      return;
+    }
+
+    const reservationIds = expiredReservations.map(
+      (reservation) => reservation.id,
+    );
+
+    await tx.ticket.updateMany({
+      where: {
+        reservationId: {
+          in: reservationIds,
+        },
+        status: 'ACTIVE',
+      },
+      data: {
+        status: 'CANCELLED',
+      },
+    });
+
+    await tx.reservation.updateMany({
+      where: {
+        id: {
+          in: reservationIds,
+        },
+        status: 'PENDING',
+      },
+      data: {
+        status: 'CANCELLED',
+      },
+    });
+  });
 
   const occupiedSeats = await prisma.ticket.findMany({
     where: {
@@ -83,5 +143,35 @@ export async function createReservation(
       reservation,
       tickets,
     };
+  });
+}
+
+export async function getReservationById(
+  reservationId: string,
+  userId: string,
+) {
+  return prisma.reservation.findFirst({
+    where: {
+      id: reservationId,
+      userId,
+    },
+    include: {
+      event: {
+        select: {
+          id: true,
+          title: true,
+          date: true,
+          location: true,
+        },
+      },
+      tickets: {
+        select: {
+          id: true,
+          seatId: true,
+          status: true,
+          code: true,
+        },
+      },
+    },
   });
 }

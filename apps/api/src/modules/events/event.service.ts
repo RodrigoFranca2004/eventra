@@ -3,6 +3,26 @@ import type {
   CreateEventInput,
   UpdateEventInput,
 } from './event.schemas.js';
+import { getMovieById } from '../catalog/tmdb.service.js';
+import type { Event } from '@prisma/client';
+
+async function enrichEvent(event: Event) {
+  if (event.type !== 'MOVIE' || !event.externalId) {
+    return {
+      ...event,
+      imageUrl: null,
+    };
+  }
+
+  const movie = await getMovieById(event.externalId);
+
+  return {
+    ...event,
+    imageUrl: movie.poster_path
+      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+      : null,
+  };
+}
 
 export async function createEvent(
   organizerId: string,
@@ -17,42 +37,49 @@ export async function createEvent(
       externalId: data.externalId,
       date: data.date,
       location: data.location,
-      capacity: data.capacity,
       price: data.price,
     },
   });
 }
 
 export async function listEvents(filters: {
-  type?: 'MOVIE' | 'SHOW';
-  search?: string;
-}) {
-  return prisma.event.findMany({
-    where: {
-      status: 'PUBLISHED',
-      deletedAt: null,
-      ...(filters.type && { type: filters.type }),
-      ...(filters.search && {
-        title: {
-          contains: filters.search,
-          mode: 'insensitive',
-        },
-      }),
-    },
-    orderBy: {
-      date: 'asc',
-    },
-  });
+    type?: 'MOVIE' | 'SHOW';
+    search?: string;
+  }) {
+    const events = await prisma.event.findMany({
+      where: {
+        status: 'PUBLISHED',
+        deletedAt: null,
+        ...(filters.type && { type: filters.type }),
+        ...(filters.search && {
+          title: {
+            contains: filters.search,
+            mode: 'insensitive',
+          },
+        }),
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    });
+
+    return Promise.all(events.map(enrichEvent));
 }
 
 export async function getPublishedEventById(id: string) {
-  return prisma.event.findFirst({
+  const event = await prisma.event.findFirst({
     where: {
       id,
       status: 'PUBLISHED',
       deletedAt: null,
     },
   });
+
+  if (!event) {
+    return null;
+  }
+
+  return enrichEvent(event);
 }
 
 export async function publishEvent(id: string, organizerId: string) {

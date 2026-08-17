@@ -265,7 +265,7 @@ eventRouter.post(
   '/:id/seats',
   authenticate,
   authorize('ORGANIZER'),
-  async (req, res, next) => {
+  async (req: AuthenticatedEventRequest, res, next) => {
     try {
       const result = createSeatsSchema.safeParse(req.body);
 
@@ -277,27 +277,9 @@ eventRouter.post(
         return;
       }
 
-      const authenticatedRequest = req as AuthenticatedRequest;
-
-      if (!authenticatedRequest.user) {
-        res.status(401).json({
-          message: 'Authentication required',
-        });
-        return;
-      }
-
-      const eventId = req.params.id;
-
-      if (Array.isArray(eventId)) {
-        res.status(400).json({
-          message: 'Invalid event ID',
-        });
-        return;
-      }
-
       const seats = await createEventSeats(
-        eventId,
-        authenticatedRequest.user.id,
+        req.params.id,
+        req.user!.id,
         result.data.rows,
       );
 

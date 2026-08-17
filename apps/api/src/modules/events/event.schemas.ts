@@ -7,7 +7,6 @@ export const createEventSchema = z.object({
   externalId: z.string().trim().optional(),
   date: z.coerce.date(),
   location: z.string().trim().min(1).max(300),
-  capacity: z.coerce.number().int().positive(),
   price: z.coerce.number().nonnegative(),
 });
 
@@ -21,10 +20,8 @@ export const updateEventSchema = z.object({
   description: z.string().trim().max(2000).optional(),
   date: z.coerce.date(),
   location: z.string().trim().min(1).max(300),
-  capacity: z.coerce.number().int().positive(),
   price: z.coerce.number().nonnegative(),
 });
-
 export const createSeatsSchema = z.object({
   rows: z.array(
     z.object({
